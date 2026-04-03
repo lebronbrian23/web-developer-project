@@ -1,0 +1,24 @@
+# Environments
+.env
+
+
+# IDEs
+.vscode/
+.idea/
+
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Node.js
+node_modules/
+
+
+# PHP
+/vendor/
+/composer.lock
+
+
+# Uploads
+public/uploads/
