@@ -1,5 +1,4 @@
 <?php 
-
 // Load environment variables from .env file
 function env($key, $default = null) {
     static $env;
