@@ -18,13 +18,16 @@ Class JobService
 
     public function createJob($data)
     {
-        // validate data
-        $errors = $this->validator->validate($data);
-        
-        if (!empty($errors)) {
-            return $errors;
+        // validate data - returns boolean true/false
+        if (!$this->validator->validate($data)) {
+            return $this->validator->errors();
         }
 
         return $this->repository->create($data);
+    }
+
+    public function getJobById($id)
+    {
+        return $this->repository->fetchById($id);
     }
 }

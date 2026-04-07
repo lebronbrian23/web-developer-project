@@ -1,0 +1,655 @@
+
+/* ── Custom Properties ── */
+:root {
+    --color-brand:        #1F69B6;
+    --color-brand-dark:   #1465C0;
+    --color-brand-light:  #E8F1FB;
+    --color-error:        #C0392B;
+    --color-error-bg:     #FDECEA;
+    --color-success:      #1E8449;
+    --color-success-bg:   #D5F5E3;
+    --color-text:         #1A1A1A;
+    --color-text-muted:   #555555;
+    --color-border:       #CBD5E1;
+    --color-border-focus: #1F69B6;
+    --color-bg:           #F8FAFC;
+    --color-white:        #FFFFFF;
+
+    --font-sans: 'Segoe UI', system-ui, -apple-system, sans-serif;
+
+    --radius-sm:  4px;
+    --radius-md:  8px;
+    --radius-lg:  12px;
+
+    --shadow-sm: 0 1px 3px rgba(0,0,0,.08);
+    --shadow-md: 0 4px 16px rgba(0,0,0,.10);
+
+    --transition: 150ms ease;
+
+    --panel-left-width: 490px;
+}
+
+/* ── Reset ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--color-text);
+    background: var(--color-bg);
+    min-height: 100vh;
+}
+
+/* ── Skip Link (Accessibility) ── */
+.skip-link {
+    position: absolute;
+    top: -100%;
+    left: 1rem;
+    z-index: 9999;
+    padding: .5rem 1rem;
+    background: var(--color-brand);
+    color: var(--color-white);
+    font-weight: 600;
+    border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+    text-decoration: none;
+    transition: top var(--transition);
+}
+.skip-link:focus { top: 0; }
+
+/* ── Page Layout ── */
+.page-wrapper {
+    display: grid;
+    grid-template-columns: 1fr;
+    min-height: 100vh;
+}
+
+/* Tablet: Single column with better spacing */
+@media (min-width: 600px) and (max-width: 767px) {
+    .page-wrapper {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Desktop and larger tablets: Two-column layout */
+@media (min-width: 768px) {
+    .page-wrapper {
+        grid-template-columns: var(--panel-left-width) 1fr;
+    }
+}
+
+/* ── Hero Panel (Left) ── */
+.hero-panel {
+    background: var(--color-brand);
+    display: none;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow: hidden;
+}
+
+@media (min-width: 768px) {
+    .hero-panel { display: flex; }
+}
+
+.hero-panel__inner {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 2.5rem 2rem;
+    width: 100%;
+    text-align: center;
+}
+
+.hero-content { margin-bottom: 0; }
+
+.hero-title {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 700;
+    color: var(--color-white);
+    line-height: 1.25;
+    margin-bottom: .75rem;
+}
+
+/* ── Form Panel (Right) ── */
+.form-panel {
+    background: var(--color-white);
+    overflow-y: auto;
+}
+
+.form-panel__inner {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 2rem 1.25rem;
+}
+
+/* Tablet optimization: Better spacing and readability */
+@media (min-width: 600px) {
+    .form-panel__inner { 
+        padding: 2.25rem 2rem;
+    }
+}
+
+@media (min-width: 768px) {
+    .form-panel__inner { padding: 3rem 2.5rem; }
+}
+
+/* ── Form Header ── */
+.form-header { margin-bottom: 2rem; }
+
+.form-header__title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-text);
+    margin-bottom: .25rem;
+}
+
+.form-header__subtitle {
+    color: var(--color-text-muted);
+    font-size: .9rem;
+}
+
+/* ── Form Group (Main Field Container) ── */
+.form-row {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    font-size: .9375rem;
+    margin-bottom: .25rem;
+    color: var(--color-text);
+}
+
+.form-group__description {
+    font-size: .875rem;
+    color: var(--color-text-muted);
+    margin-bottom: .5rem;
+}
+
+.form-group__optional {
+    font-weight: 400;
+    color: var(--color-text-muted);
+    font-size: .85rem;
+    margin-left: .35rem;
+}
+
+.form-group__hint {
+    font-size: .8125rem;
+    color: var(--color-text-muted);
+    margin-bottom: .5rem;
+}
+
+.form-group__counter {
+    font-size: .8rem;
+    color: var(--color-text-muted);
+    margin-top: .375rem;
+}
+
+.form-group__counter--warning {
+    color: var(--color-error);
+    font-weight: 600;
+}
+
+/* ── Field Base ── */
+.field {
+    margin-bottom: 1.5rem;
+}
+
+/* ── Text Input & Textarea ── */
+.form-group input,
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    padding: .625rem .875rem;
+    border: 1.5px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    font-family: inherit;
+    font-size: .9375rem;
+    color: var(--color-text);
+    background: var(--color-white);
+    transition:
+        border-color var(--transition),
+        box-shadow var(--transition);
+    appearance: none;
+    min-height: 44px;  /* Touch target minimum */
+}
+
+/* Tablet: Slightly larger touch targets */
+@media (min-width: 600px) and (max-width: 767px) {
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+        padding: .75rem 1rem;
+        font-size: 1rem;
+    }
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+    color: #94A3B8;
+}
+
+/* Focus — visible outline for keyboard users, never removed */
+.form-group input:focus-visible,
+.form-group textarea:focus-visible,
+.form-group select:focus-visible {
+    outline: none;
+    border-color: var(--color-border-focus);
+    box-shadow: 0 0 0 3px rgba(26,127,232,.2);
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+/* Error state — input-error class for individual inputs */
+.input-error,
+.form-group .input-error {
+    border-color: var(--color-error) !important;
+    background: var(--color-error-bg);
+}
+
+.input-error:focus-visible,
+.form-group .input-error:focus-visible {
+    box-shadow: 0 0 0 3px rgba(192,57,43,.2) !important;
+}
+
+/* Error state — field--error for fieldset/container */
+.field--error .form-group input,
+.field--error .form-group textarea,
+.field--error .form-group select,
+.form-group.field--error input,
+.form-group.field--error textarea,
+.form-group.field--error select {
+    border-color: var(--color-error);
+    background: var(--color-error-bg);
+}
+
+.field--error .form-group input:focus-visible,
+.field--error .form-group textarea:focus-visible,
+.field--error .form-group select:focus-visible,
+.form-group.field--error input:focus-visible,
+.form-group.field--error textarea:focus-visible,
+.form-group.field--error select:focus-visible {
+    box-shadow: 0 0 0 3px rgba(192,57,43,.2);
+}
+
+/* Error message classes */
+.error {
+    margin-top: .375rem;
+    padding: .5rem .75rem;
+    font-size: .8125rem;
+    color: var(--color-error);
+    font-weight: 500;
+    background: var(--color-error-bg);
+    border-radius: var(--radius-sm);
+}
+
+/* ── Word Count ── */
+.form-group__counter {
+    font-size: .8rem;
+    color: var(--color-text-muted);
+}
+
+.form-group__counter--warning {
+    color: var(--color-error);
+    font-weight: 600;
+}
+
+/* ── Form Row (side-by-side) ── */
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+}
+
+/* Mobile: Single column */
+@media (max-width: 480px) {
+    .form-row { grid-template-columns: 1fr; }
+}
+
+/* Tablets: Keep two columns with better gap */
+@media (min-width: 600px) and (max-width: 767px) {
+    .form-row { gap: 1rem; }
+}
+
+/* ── Budget Options (Card-based Radio Selection) ── */
+.budget-options {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+/* Mobile: Single column */
+@media (max-width: 480px) {
+    .budget-options {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Tablet: Two columns for better space utilization */
+@media (min-width: 600px) and (max-width: 767px) {
+    .budget-options {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Desktop and larger tablets: Three columns */
+@media (min-width: 768px) {
+    .budget-options {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+.budget-card {
+    position: relative;
+}
+
+.budget-card input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+}
+
+.budget-card label {
+    display: block;
+    padding: 0.75rem 0.625rem;
+    border: 1.5px solid var(--color-border);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all var(--transition);
+    text-align: center;
+    min-height: 48px;  /* Touch target minimum */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Tablet: More padding for better touch targets */
+@media (min-width: 600px) and (max-width: 767px) {
+    .budget-card label {
+        padding: 1rem 0.875rem;
+        min-height: 60px;
+    }
+}
+
+.budget-card label:hover {
+    border-color: var(--color-brand);
+    background: var(--color-brand-light);
+}
+
+.budget-card input[type="radio"]:checked + label {
+    border-color: var(--color-brand);
+    background: var(--color-brand-light);
+    box-shadow: inset 0 0 0 2px var(--color-brand);
+    font-weight: 600;
+}
+
+.budget-card label > :first-child {
+    display: block;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: .25rem;
+}
+
+.range-detail {
+    display: block;
+    font-size: .8rem;
+    color: var(--color-text-muted);
+    font-weight: 400;
+    margin-top: .25rem;
+}
+
+fieldset {
+    border: none;
+    padding: 0;
+}
+
+fieldset legend {
+    display: block;
+    font-weight: 600;
+    font-size: .9375rem;
+    margin-bottom: .25rem;
+    color: var(--color-text);
+    float: left;
+    width: 100%;
+}
+
+/* ── Form Actions ── */
+.form-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 2rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--color-border);
+}
+
+/* ── Buttons ── */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: .625rem 1.5rem;
+    border-radius: var(--radius-sm);
+    font-family: inherit;
+    font-size: .9375rem;
+    font-weight: 600;
+    line-height: 1;
+    cursor: pointer;
+    border: 1.5px solid transparent;
+    transition:
+        background var(--transition),
+        color var(--transition),
+        border-color var(--transition),
+        box-shadow var(--transition);
+    text-decoration: none;
+    min-height: 44px;  /* Touch target minimum */
+}
+
+/* Tablet: Larger buttons for better touch interaction */
+@media (min-width: 600px) and (max-width: 767px) {
+    .btn {
+        padding: .75rem 1.75rem;
+        font-size: 1rem;
+        min-height: 48px;
+    }
+}
+
+.btn--primary {
+    background: var(--color-brand);
+    color: var(--color-white);
+    border-color: var(--color-brand);
+}
+
+.btn--primary:hover {
+    background: var(--color-brand-dark);
+    border-color: var(--color-brand-dark);
+}
+
+.btn--primary:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(26,127,232,.35);
+}
+
+/* Disabled state */
+.btn--primary:disabled {
+    background: #B3D9F2;
+    border-color: #B3D9F2;
+    color: #0D47A1;
+    cursor: not-allowed;
+    opacity: 0.8;
+}
+
+.btn--primary:disabled:hover {
+    background: #B3D9F2;
+    border-color: #B3D9F2;
+}
+
+.btn--primary:disabled:focus-visible {
+    box-shadow: 0 0 0 3px rgba(26,127,232,.2);
+}
+
+.btn--secondary {
+    background: transparent;
+    color: var(--color-text-muted);
+    border-color: var(--color-border);
+}
+
+.btn--secondary:hover {
+    background: var(--color-bg);
+    border-color: #94A3B8;
+    color: var(--color-text);
+}
+
+.btn--secondary:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0,0,0,.15);
+}
+
+/* ── Summary List ── */
+.success-summary {
+    text-align: left;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.success-summary__heading {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--color-text);
+}
+
+.summary-list { display: grid; gap: .75rem; }
+
+.summary-list__row {
+    display: grid;
+    grid-template-columns: 9rem 1fr;
+    gap: .5rem;
+    padding-bottom: .75rem;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.summary-list__row:last-child { border-bottom: none; padding-bottom: 0; }
+
+.summary-list__label {
+    font-weight: 600;
+    font-size: .875rem;
+    color: var(--color-text-muted);
+}
+
+.summary-list__value {
+    font-size: .9rem;
+    color: var(--color-text);
+}
+
+.summary-list__value--script {
+    white-space: pre-wrap;
+    font-family: monospace;
+    font-size: .8125rem;
+    background: var(--color-white);
+    padding: .5rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--color-border);
+}
+
+/* ── Responsive Adjustments ── */
+/* Mobile */
+@media (max-width: 480px) {
+    .form-actions { flex-direction: column-reverse; gap: .75rem; }
+    .form-actions .btn { width: 100%; justify-content: center; }
+    .summary-list__row { grid-template-columns: 1fr; }
+    .summary-list__label { margin-bottom: -.25rem; }
+}
+
+/* Tablet: Side-by-side buttons with better spacing */
+@media (min-width: 600px) and (max-width: 767px) {
+    .form-actions { 
+        gap: 1rem; 
+        padding-top: 1.5rem;
+    }
+    .form-actions .btn { 
+        flex: 1;
+    }
+    .summary-list__row { grid-template-columns: 120px 1fr; }
+}
+
+/* ── Visually Hidden (Accessible Hide) ──
+   Hides content visually but keeps it accessible to screen
+   readers and present in the DOM. Used for honeypot field.   */
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* ── Loading State on Submit ──
+   Prevents double-clicks while the form is processing.       */
+.btn--loading {
+    opacity: .7;
+    pointer-events: none;
+    cursor: not-allowed;
+}
+
+.btn--loading::after {
+    content: '...';
+    display: inline-block;
+    animation: dots 1s steps(3, end) infinite;
+}
+
+@keyframes dots {
+    0%, 100% { opacity: 0; }
+    50%       { opacity: 1; }
+}
+
+/* ── Landscape Orientation (Tablet/Mobile) ── */
+@media (max-height: 600px) and (orientation: landscape) {
+    .form-panel__inner {
+        padding: 1.5rem 1.5rem;
+    }
+    .form-header {
+        margin-bottom: 1rem;
+    }
+    .form-group {
+        margin-bottom: 1rem;
+    }
+    .form-header__title {
+        font-size: 1.25rem;
+        margin-bottom: .125rem;
+    }
+}
+
+/* ── Print Styles ── */
+@media print {
+    .hero-panel,
+    .btn,
+    .skip-link  { display: none !important; }
+    .page-wrapper { grid-template-columns: 1fr; }
+    .form-panel { box-shadow: none; }
+}

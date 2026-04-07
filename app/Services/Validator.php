@@ -10,7 +10,7 @@ class Validator
 
     public function __construct()
     {
-        $this->maxFileSize = (int) env('MAX_FILE_SIZE', 10 * 1024 * 1024); // 10MB default
+        $this->maxFileSize = (int) env('MAX_FILE_SIZE', 20 * 1024 * 1024); // 20MB default
     }
 
     // Main validation method
@@ -114,8 +114,10 @@ class Validator
         }
     }
 
+    // validate file upload for reference_file_path as an optional field but if provided must be a valid file type and within size limits
     private function validateFileUpload(array $file): void
     {
+        // Check for upload errors
         if ($file['error'] !== UPLOAD_ERR_OK) {
             $this->errors['reference_file_path'] = match ($file['error']) {
                 UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE => 'The uploaded file exceeds the maximum allowed size.',
@@ -140,6 +142,12 @@ class Validator
         if (!in_array($mimeType, self::ALLOWED_MIME_TYPES, true)) {
             $this->errors['reference_file_path'] = 'Invalid file type.';
         }
+    }
+
+    //
+    public static function getProvinces(): array
+    {
+        return self::PROVINCES;
     }
 
     // -------------------------
