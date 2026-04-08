@@ -9,9 +9,8 @@ use App\Services\Mailer;
 use App\Services\FileUpload;
 use App\Services\Logger;
 
-class JobFormController 
+class JobFormController
 {
-
     private $csrf;
     private $model;
     private $validator;
@@ -46,7 +45,7 @@ class JobFormController
         $errors = [];
         $old_input = [];
 
-        $this->renderView('layout', compact('csrfToken', 'submission', 'provinces', 'errors', 'old_input' ,'successId'));
+        $this->renderView('layout', compact('csrfToken', 'submission', 'provinces', 'errors', 'old_input', 'successId'));
     }
 
     // Method handling the form submission,
@@ -54,10 +53,10 @@ class JobFormController
     public function store()
     {
         $timestamp = date('Y-m-d H:i:s');
-        
+
         // Validate CSRF token
         $this->csrf->verifyCsrfToken($_POST['csrf_token'] ?? '');
-    
+
         // validate honeypot field (should be empty)
         // Silently reject without giving the bot any feedback that it was caught.
         if (!empty($_POST['website'])) {
@@ -83,15 +82,15 @@ class JobFormController
         log_form("FILES Data: " . Logger::data($_FILES));
         log_form("Processed Input: " . Logger::data($input));
 
-        // Validate input data
-        $isValid = $this->validator->validate($input);
+        // Validate input data including file uploads
+        $isValid = $this->validator->validate($input, $_FILES);
 
         if (!$isValid) {
             log_form(section('VALIDATION ERRORS'), [
                 'errors' => $this->validator->errors(),
                 'input' => $input
             ]);
-            
+
             // If there are validation errors, re-render the form with error messages
             $csrfToken = $this->csrf->generateCsrfToken();
             $provinces = $this->validator->getProvinces();
@@ -123,7 +122,7 @@ class JobFormController
         $submissionDetails = $this->model->getJobById($successId);
 
         log_form(section('FORM SUBMISSION SAVED'), $submissionDetails);
-        
+
         if ($submissionDetails) {
             $this->mailer->sendConfirmationEmail($submissionDetails);
         }
@@ -137,8 +136,11 @@ class JobFormController
     // Method to render views and pass data to them
     private function renderView(string $view, array $data = [])
     {
+        // Make data available to helper functions via $GLOBALS
+        $GLOBALS['errors'] = $data['errors'] ?? [];
+        $GLOBALS['old_input'] = $data['old_input'] ?? [];
+
         extract($data);
         include __DIR__ . '/../Views/' . $view . '.php';
     }
-    
 }

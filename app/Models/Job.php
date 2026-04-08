@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-Class Job
+class Job
 {
     public function __construct(
         public string $title,

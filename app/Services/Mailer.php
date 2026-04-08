@@ -19,7 +19,7 @@ class Mailer
     {
         $this->fromAddress = env('MAIL_FROM', 'noreply@voices.com');
         $this->fromName = env('MAIL_FROM_NAME', 'Voices Job Submission Form');
-        $this->toAddress = env('MAIL_TO', 'jobform@voices.com'); 
+        $this->toAddress = env('MAIL_TO', 'jobform@voices.com');
     }
 
     public function sendConfirmationEmail(array $submission)
@@ -56,6 +56,5 @@ class Mailer
         );
 
         return $sent;
-
     }
 }

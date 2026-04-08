@@ -1,11 +1,11 @@
-<?php 
+<?php
 
 namespace App\Services;
 
 use App\Repositories\JobRepository;
 use App\Services\Validator;
 
-Class JobService
+class JobService
 {
     private $repository;
     private $validator;

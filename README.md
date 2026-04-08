@@ -121,7 +121,7 @@ voices-web-developer-project/
 │   ├── uploads/                      # Old uploads (blocked by .htaccess)
 │   └── Css/styles.css                # Main stylesheet with responsive design
 ├── storage/
-│   ├── uploads/                      # 🔒 Secure file storage (outside web root)
+│   ├── uploads/                      # Secure file storage (outside web root)
 │   └── .gitignore                    # Prevents uploaded files from git
 ├── cypress/
 │   ├── e2e/
@@ -143,6 +143,7 @@ voices-web-developer-project/
 ├── composer.json                     # PHP dependencies
 ├── phpunit.xml                       # PHPUnit configuration
 ├── cypress.config.js                 # Cypress configuration
+├── php.ini.dev                       # Development PHP config (20MB upload limit)
 ├── .env                              # Environment variables
 └── README.md                         # This file
 ```
@@ -213,12 +214,51 @@ mkdir -p logs
 chmod 755 logs
 ```
 
-### 6. Install Frontend Dependencies (for Cypress)
+### 7. Configure PHP Development Settings (File Upload Support)
+
+This step is **optional but recommended** for testing large file uploads during development.
+
+**What it does:** Creates a local PHP configuration file that allows file uploads up to 20MB (instead of the system's default 2MB).
+
+#### Option A: Let Us Create It (Automated)
+```bash
+# The php.ini.dev file already exists in the project root
+# It's configured with 20MB upload limits for development
+cat php.ini.dev
+```
+
+#### Option B: Create It Manually
+If you need to create or recreate the `php.ini.dev` file:
+
+```bash
+# Create the file in the project root
+touch php.ini.dev
+
+# Add the content (use your preferred editor, or run this)
+cat > php.ini.dev << 'EOF'
+; Custom PHP Configuration for Development
+; This overrides the system php.ini for larger file uploads
+
+post_max_size = 20M
+upload_max_filesize = 20M
+EOF
+```
+
+**What's in `php.ini.dev`:**
+```ini
+; Custom PHP Configuration for Development
+; This overrides the system php.ini for larger file uploads
+
+post_max_size = 20M
+upload_max_filesize = 20M
+```
+
+### 8. Install Frontend Dependencies (for Cypress)
 ```bash
 npm install
 ```
 
-### 7. Start the Development Server
+### 9. Start the Development Server
 ```bash
 # Option 1: Using PHP built-in server
 php -S localhost:8000 -t public
@@ -268,9 +308,22 @@ CREATE TABLE jobs (
 ## Running the Application
 
 ### Start Development Server
+
+**Recommended (with 20MB file upload support):**
+```bash
+php -c php.ini.dev -S localhost:8000 -t public
+```
+✅ Enables full file upload validation for files up to 20MB
+✅ Client-side validation works perfectly
+✅ Server-side validation displays proper error messages
+
+**Alternative (without php.ini.dev):**
 ```bash
 php -S localhost:8000 -t public
 ```
+⚠️ Files 0-2MB work fine
+⚠️ Files 2-20MB may show generic PHP errors (not app errors)
+⚠️ Validation still works, but UX is less polished
 
 ### Access the Application
 1. Open browser: **http://localhost:8000**
@@ -287,6 +340,33 @@ tail -f logs/database.log  # Database insert operations
 tail -f logs/email.log     # Email send confirmations
 tail -f logs/errors.log    # Application errors
 ```
+
+### File Upload Validation
+
+The application has **3 layers of file upload protection**:
+
+#### 1. **Client-Side JavaScript Validation** (runs immediately)
+- Checks if file > 20MB
+- Shows user-friendly error before sending
+- Prevents large files from reaching server
+
+#### 2. **PHP Configuration Limits** (controlled by php.ini.dev)
+- `post_max_size = 20M`
+- `upload_max_filesize = 20M`
+- Rejects files exceeding these limits at PHP level
+
+#### 3. **Server-Side Validator**
+- Checks MIME type (PDF, TXT, MP3, PNG, JPEG, etc.)
+- Validates file size programmatically
+- Displays proper error messages on form
+
+**Supported File Types:**
+- Images: JPEG, PNG
+- Documents: PDF, DOC, DOCX, TXT
+- Audio: MP3, WAV, MP4
+- Video: MP4, MPEG
+
+**Max File Size:** 20MB (both soft limit enforced by app and hard limit in php.ini.dev)
 
 ---
 

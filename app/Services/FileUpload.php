@@ -16,13 +16,13 @@ class FileUpload
     {
         // Get the project root (two levels up from app/Services/)
         $projectRoot = dirname(__DIR__, 2);
-        
+
         // Get upload directory from .env or use default 'storage/uploads'
         $uploadDirPath = env('UPLOAD_DIR', 'storage/uploads');
-        
+
         // Construct full path to uploads directory
         $this->uploadDir = $projectRoot . '/' . $uploadDirPath . '/';
-        
+
         // Create uploads directory if it doesn't exist (with 0755 permissions)
         if (!is_dir($this->uploadDir)) {
             mkdir($this->uploadDir, 0755, true);

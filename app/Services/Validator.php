@@ -63,7 +63,10 @@ class Validator
             return;
         }
 
-        $wordCount = str_word_count($value);
+        // Match JavaScript word counting: split by whitespace
+        // This counts numbers and all tokens separated by whitespace
+        $trimmed = trim($value);
+        $wordCount = $trimmed === '' ? 0 : count(array_filter(explode(' ', preg_replace('/\s+/', ' ', $trimmed))));
 
         if ($wordCount > 1000) {
             $this->errors['script'] = 'Job script must not exceed 1000 words.';

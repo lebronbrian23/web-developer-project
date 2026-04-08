@@ -2,14 +2,12 @@
 
 namespace App\Services;
 
-
 class Csrf
 {
-
     // Generate a new CSRF token and store it in the session
     public function generateCsrfToken(): string
     {
-        if ( empty($_SESSION['csrf_tokens']) ) {
+        if (empty($_SESSION['csrf_tokens'])) {
             $_SESSION['csrf_tokens'] = bin2hex(random_bytes(32));
         }
         return $_SESSION['csrf_tokens'];
@@ -24,5 +22,4 @@ class Csrf
         }
         return false;
     }
-
 }

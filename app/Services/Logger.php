@@ -5,7 +5,7 @@ namespace App\Services;
 class Logger
 {
     private static string $logsDir = __DIR__ . '/../../storage/logs';
-    
+
     public static function info(string $message, string $logFile = 'app.log'): void
     {
         self::write($message, $logFile);
@@ -36,11 +36,11 @@ class Logger
     {
         $timestamp = date('Y-m-d H:i:s');
         $logMessage = "[{$timestamp}] ERROR: {$message}";
-        
+
         if ($context) {
             $logMessage .= "\nContext: " . json_encode($context, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
         }
-        
+
         $logMessage .= "\n";
         self::write($logMessage, 'error.log');
         error_log($logMessage);

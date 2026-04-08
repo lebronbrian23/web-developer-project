@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Form View
  * Renders the job submission form.
@@ -20,36 +21,33 @@ $budgets = [
 // Function to retain old input values after validation errors
 function old($field, $default = '')
 {
-    global $old_input;
-    return htmlspecialchars($old_input[$field] ?? $default);
+    return htmlspecialchars($GLOBALS['old_input'][$field] ?? $default);
 }
 
 // Function to display validation error messages
 function error($field)
 {
-    global $errors;
-    if (isset($errors[$field])) {
-        return '<div class="error" id="' . $field . '-error" role="alert">' . htmlspecialchars($errors[$field]) . '</div>';
+    if (isset($GLOBALS['errors'][$field])) {
+        return '<div class="error" id="' . $field . '-error" role="alert">' . htmlspecialchars($GLOBALS['errors'][$field]) . '</div>';
     }
     return '';
 }
 
 // Function to check if a field has an error for styling purposes
 function hasError($field)
-{    global $errors;
-    return isset($errors[$field]) ? 'input-error' : '';
+{
+    return isset($GLOBALS['errors'][$field]) ? 'input-error' : '';
 }
 
 // Helper: return aria-describedby attribute if error exists for this field
 function ariaDescribedBy($field)
-{    
-    global $errors;
-    return isset($errors[$field]) ? 'aria-describedby="' . $field . '-error"' : '';
+{
+    return isset($GLOBALS['errors'][$field]) ? 'aria-describedby="' . $field . '-error"' : '';
 }
 
 // Function to generate options for the country dropdown
 function countryOptions($provinces, $selected = '')
-{    
+{
     $provinces = $provinces ?? [];
     $options = '<option value="">Select your country</option>';
     foreach ($provinces as $country => $states) {
@@ -61,7 +59,7 @@ function countryOptions($provinces, $selected = '')
 
 // Function to generate options for the state/province dropdown based on the selected country
 function stateOptions($provinces, $country, $selected = '')
-{    
+{
     $provinces = $provinces ?? [];
     $options = '<option value="">Select your state/province</option>';
     if (isset($provinces[$country])) {
@@ -106,8 +104,11 @@ function stateOptions($provinces, $country, $selected = '')
                 <span class="form-group__optional">Optional</span>
             </label>
             <p class="form-group__description">Include a small piece of a script you would like talent to read.</p>
-            <textarea id="script" name="script" rows="5" class="<?php echo hasError('script'); ?>" <?php echo ariaDescribedBy('script'); ?> placeholder="Type or paste a sample script here."></textarea>
-            <p class="form-group__counter" id="word-count">0 words</p>
+            <textarea id="script" name="script" rows="5" class="<?php echo hasError('script'); ?>" <?php echo ariaDescribedBy('script'); ?> placeholder="Type or paste a sample script here."><?php echo old('script'); ?></textarea>
+            <div class="form-group__footer">
+                <p class="form-group__counter" id="word-count">0 words</p>
+                <div id="word-warning" class="word-warning" style="display: none;" role="status" aria-live="polite"></div>
+            </div>
             <?php echo error('script'); ?>
         </div>
 

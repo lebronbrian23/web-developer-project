@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Success View
  * Shown after a valid submission via PRG redirect.
@@ -41,7 +42,7 @@ $budgetLabel = $budgetLabels[$submission['budget']] ?? htmlspecialchars($submiss
                 <dd class="summary-list__value"><?= htmlspecialchars($budgetLabel) ?></dd>
             </div>
 
-            <?php if (!empty($submission['script'])): ?>
+            <?php if (!empty($submission['script'])) : ?>
             <div class="summary-list__row">
                 <dt class="summary-list__label">Script</dt>
                 <dd class="summary-list__value summary-list__value--script">

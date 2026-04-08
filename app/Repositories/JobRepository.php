@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Repositories;
 
 use PDO;
@@ -29,7 +28,7 @@ class JobRepository
 
         try {
             $result = $stmt->execute();
-            
+
             if ($result) {
                 $lastId = (int) $this->db->lastInsertId();
                 log_database("INSERT SUCCESSFUL - ID: {$lastId}", true, $data);
@@ -42,7 +41,7 @@ class JobRepository
                 'data' => $data,
                 'error_info' => $stmt->errorInfo()
             ]);
-            
+
             throw $e;
         }
     }
@@ -52,7 +51,7 @@ class JobRepository
     {
         $stmt = $this->db->prepare("SELECT title, script, country, state_or_province, reference_file_path, budget, ip_address, created_at, updated_at FROM jobs WHERE id = :id");
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-        $stmt->execute();   
+        $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 }

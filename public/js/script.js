@@ -6,34 +6,51 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
-    //  Word Counter 
+    //  Word Counter
+    const WORD_LIMIT = 1000;
+    const WARNING_THRESHOLD = 900;
 
     const scriptTextarea = document.getElementById('script');
-    const wordCountEl    = document.getElementById('word-count');
+    const wordCountEl = document.getElementById('word-count');
+    const wordWarningEl = document.getElementById('word-warning');
 
     if (scriptTextarea && wordCountEl) {
+        const getWordCount = (text) => text.trim() === '' ? 0 : text.trim().split(/\s+/).length;
+
         const updateWordCount = () => {
-            const text  = scriptTextarea.value.trim();
-            const words = text === '' ? 0 : text.split(/\s+/).length;
-            const chars = scriptTextarea.value.length;
+            const words = getWordCount(scriptTextarea.value);
+            const isWarning = words > WARNING_THRESHOLD;
+            const isExceeded = words > WORD_LIMIT;
 
+            // Update word count display
             wordCountEl.textContent = `${words} word${words !== 1 ? 's' : ''}`;
+            wordCountEl.classList.toggle('form-group__counter--warning', isWarning);
 
-            // Visual warning when approaching limit
-            const isNearLimit = chars > 900;
-            wordCountEl.classList.toggle('form-group__counter--warning', isNearLimit);
+            // Update warning message
+            if (wordWarningEl) {
+                if (isExceeded) {
+                    wordWarningEl.textContent = `Script exceeds 1000 word limit (${words} words). Please remove ${words - WORD_LIMIT} word${words - WORD_LIMIT !== 1 ? 's' : ''}.`;
+                    wordWarningEl.classList.remove('word-warning--near');
+                    wordWarningEl.classList.add('word-warning--exceeded');
+                    wordWarningEl.style.display = 'block';
+                } else if (isWarning) {
+                    wordWarningEl.textContent = `Approaching limit: ${WORD_LIMIT - words} word${WORD_LIMIT - words !== 1 ? 's' : ''} remaining`;
+                    wordWarningEl.classList.remove('word-warning--exceeded');
+                    wordWarningEl.classList.add('word-warning--near');
+                    wordWarningEl.style.display = 'block';
+                } else {
+                    wordWarningEl.style.display = 'none';
+                    wordWarningEl.classList.remove('word-warning--near', 'word-warning--exceeded');
+                }
+            }
 
-            // Update aria label so screen readers announce count changes
-            wordCountEl.setAttribute(
-                'aria-label',
-                `Script: ${words} word${words !== 1 ? 's' : ''}, ${chars} of 1000 characters used`
-            );
+            // Update aria label for screen readers
+            const status = isExceeded ? 'exceeds limit' : isWarning ? 'approaching limit' : '';
+            wordCountEl.setAttribute('aria-label', `Script: ${words} word${words !== 1 ? 's' : ''}${status ? ` (${status})` : ''}`);
         };
 
         scriptTextarea.addEventListener('input', updateWordCount);
-
-        // Run once on load in case of browser autofill or old values
-        updateWordCount();
+        updateWordCount(); // Run on load for browser autofill/old values
     }
 
 
@@ -78,7 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
             );
         });
 
-        // On page load: if a country is pre-selected 
+        // On page load: if a country is pre-selected
         // populate provinces and re-select the saved state
         if (countrySelect.value) {
             const savedProvince = provinceSelect.dataset.selected || '';
@@ -90,7 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-    //  Client-Side Validation 
+    //  Client-Side Validation
 
     const form = document.getElementById('job-form');
 
@@ -110,7 +127,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const province = document.getElementById('state_or_province');
             const budgetSelected = form.querySelector('input[name="budget"]:checked');
 
-            const isValid = 
+            const isValid =
                 jobTitle && jobTitle.value.trim() !== '' &&
                 country && country.value !== '' &&
                 province && province.value !== '' &&
@@ -166,6 +183,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 errors.push({ field: budgetGroup, message: 'Please select a budget range.' });
             }
 
+            // Script/textarea word count validation (optional field but if provided must not exceed 1000 words)
+            const scriptTextarea = document.getElementById('script');
+            if (scriptTextarea && scriptTextarea.value.trim() !== '') {
+                const words = scriptTextarea.value.trim().split(/\s+/).length;
+                if (words > 1000) {
+                    alert(`Script exceeds 1000 word limit (${words} words). Please shorten your script.`);
+                    errors.push({ field: scriptTextarea, message: `Script exceeds 1000 word limit (${words} words).` });
+                }
+            }
+
             // File size validation (optional field but if provided must be within size limit)
             const fileInput = document.getElementById('reference_file_path');
             if (fileInput && fileInput.files.length > 0) {
@@ -191,14 +218,31 @@ document.addEventListener('DOMContentLoaded', () => {
                 form.querySelectorAll('.js-error').forEach(el => el.remove());
 
                 errors.forEach(({ field, message }) => {
-                    const container = field.closest('.form-group, fieldset, .budget-options');
-                    if (container) {
-                        const errorEl = document.createElement('p');
-                        errorEl.className = 'field__error js-error';
-                        errorEl.setAttribute('role', 'alert');
-                        errorEl.textContent = message;
-                        container.appendChild(errorEl);
-                        container.classList.add('field--error');
+                    // Special handling for textarea (script field)
+                    if (field.id === 'script') {
+                        const wordCountEl = document.getElementById('word-count');
+                        if (wordCountEl) {
+                            const errorEl = document.createElement('div');
+                            errorEl.className = 'error js-error';
+                            errorEl.setAttribute('role', 'alert');
+                            errorEl.textContent = message;
+                            wordCountEl.parentElement.appendChild(errorEl);
+                        }
+                    } else {
+                        // For other fields, find closest container
+                        const container = field.closest('.form-group') ||
+                                       field.closest('fieldset') ||
+                                       field.closest('.budget-options') ||
+                                       field.parentElement;
+
+                        if (container) {
+                            const errorEl = document.createElement('div');
+                            errorEl.className = 'error js-error';
+                            errorEl.setAttribute('role', 'alert');
+                            errorEl.textContent = message;
+                            container.appendChild(errorEl);
+                            container.classList.add('field--error');
+                        }
                     }
                 });
 
@@ -238,7 +282,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-        // ── Reset Handler 
+        // ── Reset Handler
         // Clear JS-added errors and loading state when reset is clicked
 
         if (resetBtn) {

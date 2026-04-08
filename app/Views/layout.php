@@ -25,11 +25,11 @@
     <!-- ── Right Panel ── -->
     <main id="main-content" class="form-panel">
         
-        <?php if (!empty($successId) && !empty($submission)): ?>
+        <?php if (!empty($successId) && !empty($submission)) : ?>
             <!-- ── Success State ── -->
             <?php require __DIR__ . '/success.php'; ?>
 
-        <?php else: ?>
+        <?php else : ?>
             <!-- ── Form State ── -->
             <?php require __DIR__ . '/form.php'; ?>
 
