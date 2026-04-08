@@ -25,7 +25,7 @@
     <!-- ── Right Panel ── -->
     <main id="main-content" class="form-panel">
         
-        <?php if (!empty($successId) && !empty($submission)) : ?>
+        <?php if (!empty($submission)) : ?>
             <!-- ── Success State ── -->
             <?php require __DIR__ . '/success.php'; ?>
 

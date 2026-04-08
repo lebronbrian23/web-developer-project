@@ -22,10 +22,16 @@ class Mailer
         $this->toAddress = env('MAIL_TO', 'jobform@voices.com');
     }
 
-    public function sendConfirmationEmail(array $submission)
+    /**
+     * Send confirmation email for a new job submission
+     */
+    public function sendConfirmationEmail(array $submission): bool
     {
+        // Sanitize title for email headers (prevent header injection)
+        $sanitizedTitle = $this->sanitizeHeaderValue($submission['title'] ?? 'No Title');
+        
         // Build the email subject and body
-        $subject = "New Job Submission: " . ($submission['title'] ?? 'No Title');
+        $subject = "New Job Submission: " . $sanitizedTitle;
         $body = "A new job has been submitted with the following details:\n\n";
         $body .= "Title: " . ($submission['title'] ?? 'N/A') . "\n";
         $body .= "Script: " . ($submission['script'] ?? 'N/A') . "\n";
@@ -57,4 +63,16 @@ class Mailer
 
         return $sent;
     }
+
+    /**
+     * Sanitize a value for use in email headers
+     * Prevents email header injection by removing control characters
+     */
+    private function sanitizeHeaderValue(string $value): string
+    {
+        // Remove any newlines, carriage returns, and other control characters
+        // These could be used for header injection attacks
+        return preg_replace('/[\r\n\0]/', '', $value);
+    }
+
 }

@@ -48,7 +48,7 @@ class JobRepository
     // Fetch a job entry by its ID
     public function fetchById($id)
     {
-        $stmt = $this->db->prepare("SELECT title, script, country, state_or_province, reference_file_path, budget, ip_address, created_at, updated_at FROM jobs WHERE id = :id");
+        $stmt = $this->db->prepare("SELECT id, title, script, country, state_or_province, reference_file_path, budget, ip_address, created_at, updated_at FROM jobs WHERE id = :id");
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);

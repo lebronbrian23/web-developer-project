@@ -7,6 +7,8 @@ class Validator
     private array $errors = [];
 
     private int $maxFileSize;
+    
+    private static ?array $provinces = null;
 
     public function __construct()
     {
@@ -81,7 +83,7 @@ class Validator
             return;
         }
 
-        if (!array_key_exists($value, self::PROVINCES)) {
+        if (!array_key_exists($value, self::getProvinces())) {
             $this->errors['country'] = 'Please select a valid country.';
         }
     }
@@ -94,9 +96,10 @@ class Validator
             return;
         }
 
+        $provinces = self::getProvinces();
         if (
-            isset(self::PROVINCES[$country]) &&
-            !array_key_exists($value, self::PROVINCES[$country])
+            isset($provinces[$country]) &&
+            !array_key_exists($value, $provinces[$country])
         ) {
             $this->errors['state_or_province'] = 'Please select a valid state/province.';
         }
@@ -147,10 +150,13 @@ class Validator
         }
     }
 
-    //
+    // Load provinces data from a separate file 
     public static function getProvinces(): array
     {
-        return self::PROVINCES;
+        if (self::$provinces === null) {
+            self::$provinces = require __DIR__ . '/../Data/Provinces.php';
+        }
+        return self::$provinces;
     }
 
     // -------------------------
@@ -167,40 +173,5 @@ class Validator
         'audio/mpeg',
         'audio/wav',
         'audio/mp4',
-    ];
-
-    private const PROVINCES = [
-        'CA' => [
-            'AB' => 'Alberta',
-            'BC' => 'British Columbia',
-            'MB' => 'Manitoba',
-            'NB' => 'New Brunswick',
-            'NL' => 'Newfoundland and Labrador',
-            'NS' => 'Nova Scotia',
-            'NT' => 'Northwest Territories',
-            'NU' => 'Nunavut',
-            'ON' => 'Ontario',
-            'PE' => 'Prince Edward Island',
-            'QC' => 'Quebec',
-            'SK' => 'Saskatchewan',
-            'YT' => 'Yukon',
-        ],
-        'US' => [
-            'AL' => 'Alabama','AK' => 'Alaska','AZ' => 'Arizona','AR' => 'Arkansas',
-            'CA' => 'California','CO' => 'Colorado','CT' => 'Connecticut','DE' => 'Delaware',
-            'FL' => 'Florida','GA' => 'Georgia','HI' => 'Hawaii','ID' => 'Idaho',
-            'IL' => 'Illinois','IN' => 'Indiana','IA' => 'Iowa','KS' => 'Kansas',
-            'KY' => 'Kentucky','LA' => 'Louisiana','ME' => 'Maine','MD' => 'Maryland',
-            'MA' => 'Massachusetts','MI' => 'Michigan','MN' => 'Minnesota',
-            'MS' => 'Mississippi','MO' => 'Missouri','MT' => 'Montana',
-            'NE' => 'Nebraska','NV' => 'Nevada','NH' => 'New Hampshire',
-            'NJ' => 'New Jersey','NM' => 'New Mexico','NY' => 'New York',
-            'NC' => 'North Carolina','ND' => 'North Dakota','OH' => 'Ohio',
-            'OK' => 'Oklahoma','OR' => 'Oregon','PA' => 'Pennsylvania',
-            'RI' => 'Rhode Island','SC' => 'South Carolina','SD' => 'South Dakota',
-            'TN' => 'Tennessee','TX' => 'Texas','UT' => 'Utah','VT' => 'Vermont',
-            'VA' => 'Virginia','WA' => 'Washington','WV' => 'West Virginia',
-            'WI' => 'Wisconsin','WY' => 'Wyoming','DC' => 'District of Columbia',
-        ],
     ];
 }

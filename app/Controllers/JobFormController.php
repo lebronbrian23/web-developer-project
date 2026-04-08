@@ -31,13 +31,19 @@ class JobFormController
     {
         $csrfToken = $this->csrf->generateCsrfToken();
 
-        // Check for a success submission ID passed via redirect
-        $successId = isset($_GET['submitted']) ? $_GET['success_id'] : null;
+        // Check for a success submission in session (not URL)
         $submission = null;
-
-        if ($successId) {
-            // fetch the submission details from the database
-            $submission = $this->model->getJobById($successId);
+        $successId = null;
+        
+        if (isset($_GET['submitted']) && $_GET['submitted'] == 1) {
+            // Retrieve success submission from session (secure, not from URL)
+            if (isset($_SESSION['success_submission'])) {
+                $submission = $_SESSION['success_submission'];
+                $successId = $submission['id'] ?? null;
+                
+                // Clear session data after retrieval (one-time use)
+                unset($_SESSION['success_submission']);
+            }
         }
 
         // Fetch provinces for the dropdown
@@ -55,7 +61,11 @@ class JobFormController
         $timestamp = date('Y-m-d H:i:s');
 
         // Validate CSRF token
-        $this->csrf->verifyCsrfToken($_POST['csrf_token'] ?? '');
+        if (!$this->csrf->verifyCsrfToken($_POST['csrf_token'] ?? '')) {
+            log_error('CSRF token verification failed', ['ip' => $_SERVER['REMOTE_ADDR'] ?? 'unknown']);
+            http_response_code(403);
+            die('Access denied');
+        }
 
         // validate honeypot field (should be empty)
         // Silently reject without giving the bot any feedback that it was caught.
@@ -120,9 +130,12 @@ class JobFormController
             $this->mailer->sendConfirmationEmail($submissionDetails);
         }
 
-        // Redirect to success view with the submission ID
-        // Prevents duplicate submissions on page refresh
-        header("Location: ?submitted=1&success_id={$successId}");
+        // Store success submission in session (don't expose ID in URL)
+        $_SESSION['success_submission'] = $submissionDetails;
+        
+        // Redirect to success view without exposing the submission ID
+        // Prevents users from enumerating all submissions via URL manipulation
+        header("Location: ?submitted=1");
         exit();
     }
 

@@ -63,9 +63,9 @@ function stateOptions($provinces, $country, $selected = '')
     $provinces = $provinces ?? [];
     $options = '<option value="">Select your state/province</option>';
     if (isset($provinces[$country])) {
-        foreach ($provinces[$country] as $state) {
-            $isSelected = $state === $selected ? 'selected' : '';
-            $options .= '<option value="' . htmlspecialchars($state) . '" ' . $isSelected . '>' . htmlspecialchars($state) . '</option>';
+        foreach ($provinces[$country] as $code => $state) {
+            $isSelected = $code === $selected ? 'selected' : '';
+            $options .= '<option value="' . htmlspecialchars($code) . '" ' . $isSelected . '>' . htmlspecialchars($state) . '</option>';
         }
     }
     return $options;
