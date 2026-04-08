@@ -2,7 +2,6 @@
 
 /**
  * Global Logger Helper Functions
- * Include these functions in your app for easy logging from anywhere
  */
 
 use App\Services\Logger;

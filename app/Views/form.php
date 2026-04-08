@@ -106,7 +106,7 @@ function stateOptions($provinces, $country, $selected = '')
             <p class="form-group__description">Include a small piece of a script you would like talent to read.</p>
             <textarea id="script" name="script" rows="5" class="<?php echo hasError('script'); ?>" <?php echo ariaDescribedBy('script'); ?> placeholder="Type or paste a sample script here."><?php echo old('script'); ?></textarea>
             <div class="form-group__footer">
-                <p class="form-group__counter" id="word-count">0 words</p>
+                <p class="form-group__counter" id="word-count" style="text-align: right;">0 words</p>
                 <div id="word-warning" class="word-warning" style="display: none;" role="status" aria-live="polite"></div>
             </div>
             <?php echo error('script'); ?>
