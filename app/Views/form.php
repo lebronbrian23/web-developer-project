@@ -75,11 +75,6 @@ function stateOptions($provinces, $country, $selected = '')
 
 <div class="form-panel__inner">
 
-    <header class="form-header">
-        <h2 class="form-header__title">Post your project</h2>
-        <p class="form-header__subtitle">Fill in the details below to find your perfect voice talent.</p>
-    </header>
-
     <form id="job-form" action="index.php" method="POST" aria-label="Job Submission Form" enctype="multipart/form-data" class="job-form" novalidate>
         <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($csrfToken); ?>">
 

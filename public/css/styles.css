@@ -113,6 +113,7 @@ body {
     color: var(--color-white);
     line-height: 1.25;
     margin-bottom: .75rem;
+    text-align: left;
 }
 
 /* ── Form Panel (Right) ── */
@@ -136,21 +137,6 @@ body {
 
 @media (min-width: 768px) {
     .form-panel__inner { padding: 3rem 2.5rem; }
-}
-
-/* ── Form Header ── */
-.form-header { margin-bottom: 2rem; }
-
-.form-header__title {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--color-text);
-    margin-bottom: .25rem;
-}
-
-.form-header__subtitle {
-    color: var(--color-text-muted);
-    font-size: .9rem;
 }
 
 /* ── Form Group (Main Field Container) ── */
