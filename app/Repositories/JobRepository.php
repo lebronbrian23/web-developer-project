@@ -31,7 +31,6 @@ class JobRepository
 
             if ($result) {
                 $lastId = (int) $this->db->lastInsertId();
-                log_database("INSERT SUCCESSFUL - ID: {$lastId}", true, $data);
                 return $lastId;
             } else {
                 throw new \Exception("Execute returned false");

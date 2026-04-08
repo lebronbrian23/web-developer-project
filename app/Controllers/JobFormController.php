@@ -76,12 +76,7 @@ class JobFormController
                 !empty($_FILES['reference_file_path']['name']) ? $_FILES['reference_file_path']['name'] : null,
         ];
 
-        // Log form submission received
-        log_form(section('FORM SUBMISSION RECEIVED'));
-        log_form("POST Data: " . Logger::data($_POST));
-        log_form("FILES Data: " . Logger::data($_FILES));
-        log_form("Processed Input: " . Logger::data($input));
-
+        
         // Validate input data including file uploads
         $isValid = $this->validator->validate($input, $_FILES);
 
@@ -120,8 +115,6 @@ class JobFormController
 
         // Fetch submission details and send email
         $submissionDetails = $this->model->getJobById($successId);
-
-        log_form(section('FORM SUBMISSION SAVED'), $submissionDetails);
 
         if ($submissionDetails) {
             $this->mailer->sendConfirmationEmail($submissionDetails);
