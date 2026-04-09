@@ -180,5 +180,6 @@ class Validator
         'audio/mpeg',
         'audio/wav',
         'audio/mp4',
+        'video/mp4',
     ];
 }
