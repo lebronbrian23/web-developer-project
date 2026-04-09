@@ -6,16 +6,17 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
-    //  Word Counter
+    //  Constants and Utilities
     const WORD_LIMIT = 1000;
     const WARNING_THRESHOLD = 900;
+    const getWordCount = (text) => text.trim() === '' ? 0 : text.trim().split(/\s+/).length;
 
+    //  Word Counter
     const scriptTextarea = document.getElementById('script');
     const wordCountEl = document.getElementById('word-count');
     const wordWarningEl = document.getElementById('word-warning');
 
     if (scriptTextarea && wordCountEl) {
-        const getWordCount = (text) => text.trim() === '' ? 0 : text.trim().split(/\s+/).length;
 
         const updateWordCount = () => {
             const words = getWordCount(scriptTextarea.value);
@@ -117,14 +118,17 @@ document.addEventListener('DOMContentLoaded', () => {
         const resetBtn = form.querySelector('button[type="reset"]');
         const originalSubmitText = submitBtn?.textContent || 'Submit';
 
+        // Cache form field references to avoid repeated querying
+        const jobTitle = document.getElementById('title');
+        const country = document.getElementById('country');
+        const province = document.getElementById('state_or_province');
+        const budgetRadios = form.querySelectorAll('input[name="budget"]');
+
         // Track validation state to prevent double-submit handler from running on validation errors
         let isValidationPassed = false;
 
         // Helper function to check if all required fields are filled
         const checkFormValidity = () => {
-            const jobTitle = document.getElementById('title');
-            const country = document.getElementById('country');
-            const province = document.getElementById('state_or_province');
             const budgetSelected = form.querySelector('input[name="budget"]:checked');
 
             const isValid =
@@ -145,12 +149,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Check form validity on page load
         checkFormValidity();
-
-        // Add listeners to all required fields to check validity in real-time
-        const jobTitle = document.getElementById('title');
-        const country = document.getElementById('country');
-        const province = document.getElementById('state_or_province');
-        const budgetRadios = form.querySelectorAll('input[name="budget"]');
 
         if (jobTitle) jobTitle.addEventListener('input', checkFormValidity);
         if (country) country.addEventListener('change', checkFormValidity);
@@ -186,8 +184,8 @@ document.addEventListener('DOMContentLoaded', () => {
             // Script/textarea word count validation (optional field but if provided must not exceed 1000 words)
             const scriptTextarea = document.getElementById('script');
             if (scriptTextarea && scriptTextarea.value.trim() !== '') {
-                const words = scriptTextarea.value.trim().split(/\s+/).length;
-                if (words > 1000) {
+                const words = getWordCount(scriptTextarea.value);
+                if (words > WORD_LIMIT) {
                     alert(`Script exceeds 1000 word limit (${words} words). Please shorten your script.`);
                     errors.push({ field: scriptTextarea, message: `Script exceeds 1000 word limit (${words} words).` });
                 }

@@ -232,6 +232,11 @@ npm install
 php -S localhost:8000 -t public
 
 ```
+Use this command if you added php.ini.dev 
+```bash
+# Using PHP built-in server
+php -c php.ini.dev -S localhost:8000 -t public 2>&1 | head -20
+```
 
 The Application is now accessible at: **http://localhost:8000**
 
