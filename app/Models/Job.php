@@ -1,4 +1,9 @@
 <?php
+/**
+ * Job
+ *
+ * Represents a job entry in the system.
+ */
 
 namespace App\Models;
 

@@ -1,4 +1,9 @@
 <?php
+/**
+ * JobRepository
+ *
+ * Handles database interactions for job entries.
+ */
 
 namespace App\Repositories;
 

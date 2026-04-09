@@ -1,4 +1,10 @@
 <?php
+/**
+ * JobFormController
+ *
+ * Handles job form submissions, including validation, CSRF protection,
+ * and file uploads.
+ */
 
 namespace App\Controllers;
 

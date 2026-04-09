@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * Csrf
+ *
+ * Handles CSRF token generation and verification.
+ */
+
 namespace App\Services;
 
 class Csrf

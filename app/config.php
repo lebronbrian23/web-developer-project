@@ -1,4 +1,10 @@
 <?php
+/**
+ * Config
+ *
+ * Handles application configuration and environment variables.
+ */
+
 
 // Load environment variables from .env file
 function env($key, $default = null)

@@ -1,4 +1,9 @@
 <?php
+/**
+ * Logger
+ *
+ * Handles application logging for various events and errors.
+ */
 
 namespace App\Services;
 

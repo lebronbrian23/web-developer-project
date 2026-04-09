@@ -1,4 +1,9 @@
 <?php
+/**
+ * Database
+ *
+ * Handles database connection and interactions.
+ */
 
 Class Database {
 

@@ -1,4 +1,9 @@
 <?php
+/**
+ * Index
+ *
+ * Handles the main entry point for the application.
+ */
 
 use App\Controllers\JobFormController;
 use App\Repositories\JobRepository;

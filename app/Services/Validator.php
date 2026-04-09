@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * Validator
+ *
+ * Handles validation of various input fields and file uploads.
+ */
+
+
 namespace App\Services;
 
 class Validator

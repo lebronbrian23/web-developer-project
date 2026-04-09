@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * JobService
+ *
+ * Handles job-related operations and interactions with the repository.
+ */
+
+
 namespace App\Services;
 
 use App\Repositories\JobRepository;
