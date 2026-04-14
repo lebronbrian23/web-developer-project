@@ -1,6 +1,6 @@
-# Voices Job Submission Form - Web Developer Take-Home Assignment
+# Job Submission Form - Web Developer
 
-A full-stack web application form for submitting voice acting job opportunities with field requirements, server-side validation, email confirmations, and comprehensive logging. Built with PHP, MySQL, and JS.
+A full-stack web application form for submitting acting job opportunities with field requirements, server-side validation, email confirmations, and comprehensive logging. Built with PHP, MySQL, and JS.
 ![Submission form screenshot](image.png)
 ## Table of Contents
 
@@ -22,7 +22,7 @@ A full-stack web application form for submitting voice acting job opportunities 
 
 ## Project Overview
 
-The **Voices Job Submission Form** is a web application form designed to collect voice acting job opportunities from users. The application features:
+The ** Job Submission Form** is a web application form designed to collect voice acting job opportunities from users. The application features:
 
 - A responsive HTML form with real-time client-side validation
 - Comprehensive server-side validation using a custom Validator service
@@ -32,7 +32,7 @@ The **Voices Job Submission Form** is a web application form designed to collect
 - Tests PHPUnit (13 tests) and Cypress E2E tests (19 tests)
 - Database persistence using MySQL with proper error handling
 
-**Purpose:** This take-home assignment demonstrates full-stack development skills including form handling, validation, database operations, code organization and testing.
+**Purpose:** This assignment demonstrates full-stack development skills including form handling, validation, database operations, code organization and testing.
 
 ---
 
