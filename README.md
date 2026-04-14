@@ -22,7 +22,7 @@ A full-stack web application form for submitting acting job opportunities with f
 
 ## Project Overview
 
-The ** Job Submission Form** is a web application form designed to collect voice acting job opportunities from users. The application features:
+The **Job Submission Form** is a web application form designed to collect voice acting job opportunities from users. The application features:
 
 - A responsive HTML form with real-time client-side validation
 - Comprehensive server-side validation using a custom Validator service
